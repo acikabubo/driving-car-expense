@@ -6,7 +6,26 @@
 
 <body>
     <h2>Calculation</h2>
-    <h3>{{ consumption }} L/100 ({{ trip_consumption }} x {{ petrol_price }} = {{ cost }})</h3>
+    <input type="text" id="tripConsumption" value="{{ consumption }} L/100 ({{ trip_consumption }} x {{ petrol_price }} = {{ cost }})"><br><br>
+    <button onclick="copy()">Copy</button>
+
+    <script>
+        function copy() {
+            /* Get the text field */
+            var copyText = document.getElementById("tripConsumption");
+
+            /* Select the text field */
+            copyText.select();
+            copyText.setSelectionRange(0, 99999); /* For mobile devices */
+
+            /* Copy the text inside the text field */
+            navigator.clipboard.writeText(copyText.value);
+
+            /* Alert the copied text */
+            alert("Copied the text: " + copyText.value);
+        }
+    </script>
+
 </body>
 
 </html>

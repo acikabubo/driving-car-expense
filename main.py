@@ -22,8 +22,8 @@ async def calculate(
     arrive_odometer: int = Form()
 ):
     distance = arrive_odometer - start_odometer
-    trip_consumption = (distance * consumption) / 100
-    cost = trip_consumption * petrol_price
+    trip_consumption = round((distance * consumption) / 100, 1)
+    cost = round(trip_consumption * petrol_price)
 
     return templates.TemplateResponse(
         "calculations.html", {

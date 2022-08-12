@@ -1,0 +1,10 @@
+body {
+    padding: 15px;
+}
+
+@media only screen and (max-width: 480px) {
+    .formContainer {
+        display: flex;
+        flex-direction: column;
+    }
+}

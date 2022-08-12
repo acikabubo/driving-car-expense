@@ -2,24 +2,37 @@
 
 <head>
     <title>Driving car expanse</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="{{ url_for('static', path='/styles.css') }}" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
 </head>
 
 <body>
-    <h2>Driving car expense</h2>
-    <form action="/calculate" method="POST">
-        <label for="petrol_price">Petrol price:</label><br>
-        <input type="number" step="0.1" placeholder="0.0" id="petrol_price" name="petrol_price" autofocus required><br><br>
-
-        <label for="consumption">Consumption:</label><br>
-        <input type="number" step="0.1" placeholder="0.0" id="consumption" name="consumption" required><br><br>
-
-        <label for="start_odometer">Start odometer:</label><br>
-        <input type="number" placeholder="0" id="start_odometer" name="start_odometer" required><br><br>
-
-        <label for="arrive_odometer">Arrive odometer:</label><br>
-        <input type="number" placeholder="0" id="arrive_odometer" name="arrive_odometer" required><br><br>
-
-        <input type="submit" value="Calculate">
+    <h2 align="center">Driving car expense</h2><br>
+    <form class="formContainer" action="/calculate" method="POST">
+        <div class="mb-3">
+            <label for="petrol_price" class="form-label">Petrol price:</label>
+            <input type="number" class="form-control" step="0.1" placeholder="0.0" id="petrol_price" name="petrol_price" autofocus required>
+        </div>
+        <div class="mb-3">
+            <label for="consumption" class="form-label">Consumption:</label>
+            <input type="number" class="form-control" step="0.1" placeholder="0.0" id="consumption" name="consumption" required>
+        </div>
+        <div class="mb-3">
+            <label for="start_odometer" class="form-label">Start odometer:</label>
+            <input type="number" class="form-control" placeholder="0" id="start_odometer" name="start_odometer" required>
+        </div>
+        <div class="mb-3">
+            <label for="arrive_odometer" class="form-label">Arrive odometer:</label>
+            <input type="number" class="form-control" placeholder="0" id="arrive_odometer" name="arrive_odometer" required>
+        </div>
+        <br>
+        <button type="submit" class="btn btn-primary">Calculate</button>
     </form>
 </body>
 

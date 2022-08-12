@@ -1,0 +1,31 @@
+<html>
+
+<head>
+    <title>Driving car expanse</title>
+</head>
+
+<body>
+    <h1>Driving car expense</h1>
+    <form action="/calculate" method="POST">
+        <label for="petrol_price">Petrol price:</label><br>
+        <input type="number" id="petrol_price" name="petrol_price"><br><br>
+
+        <label for="consumption">Consumption:</label><br>
+        <input type="number" id="consumption" name="consumption"><br><br>
+
+        <label for="start_time">Start time:</label><br>
+        <input type="datetime-local" id="start_time" name="start_time"><br><br>
+
+        <label for="start_odometer">Start odometer:</label><br>
+        <input type="number" id="start_odometer" name="start_odometer"><br><br>
+
+        <label for="arrive_time">Arrive time:</label><br>
+        <input type="datetime-local" id="arrive_time" name="arrive_time"><br><br>
+
+        <label for="arrive_odometer">Arrive odometer:</label><br>
+        <input type="number" id="arrive_odometer" name="arrive_odometer"><br><br>
+
+        <input type="submit" value="Calculate">
+    </form>
+</body>
+</html>

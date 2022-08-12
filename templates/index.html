@@ -5,27 +5,22 @@
 </head>
 
 <body>
-    <h1>Driving car expense</h1>
+    <h2>Driving car expense</h2>
     <form action="/calculate" method="POST">
         <label for="petrol_price">Petrol price:</label><br>
-        <input type="number" id="petrol_price" name="petrol_price"><br><br>
+        <input type="number" step="0.1" placeholder="0.0" id="petrol_price" name="petrol_price" required><br><br>
 
         <label for="consumption">Consumption:</label><br>
-        <input type="number" id="consumption" name="consumption"><br><br>
-
-        <label for="start_time">Start time:</label><br>
-        <input type="datetime-local" id="start_time" name="start_time"><br><br>
+        <input type="number" step="0.1" placeholder="0.0" id="consumption" name="consumption" required><br><br>
 
         <label for="start_odometer">Start odometer:</label><br>
-        <input type="number" id="start_odometer" name="start_odometer"><br><br>
-
-        <label for="arrive_time">Arrive time:</label><br>
-        <input type="datetime-local" id="arrive_time" name="arrive_time"><br><br>
+        <input type="number" placeholder="0" id="start_odometer" name="start_odometer" required><br><br>
 
         <label for="arrive_odometer">Arrive odometer:</label><br>
-        <input type="number" id="arrive_odometer" name="arrive_odometer"><br><br>
+        <input type="number" placeholder="0" id="arrive_odometer" name="arrive_odometer" required><br><br>
 
         <input type="submit" value="Calculate">
     </form>
 </body>
+
 </html>

@@ -30,7 +30,8 @@ async def calculate(
     driven_time: time = Form(),
     arrive_dt: datetime = Form()
 ):
-    if start_odometer is None and driven_km is None:
+    if (start_odometer is None and driven_km is None) or (
+            start_odometer is not None and driven_km is not None):
         return templates.TemplateResponse(
             "missing_fields.html", {"request": request}
         )

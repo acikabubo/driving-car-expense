@@ -17,7 +17,7 @@
     <form class="formContainer" action="/calculate" method="POST">
         <div class="mb-3">
             <label for="petrol_price" class="form-label">Petrol price:</label>
-            <input type="number" class="form-control" step="0.1" placeholder="0.0" id="petrol_price" name="petrol_price" autofocus required>
+            <input type="number" class="form-control" step="0.1" placeholder="0.0" id="petrol_price" name="petrol_price" value="{{ petrol_price }}" autofocus required>
         </div>
         <div class="mb-3">
             <label for="consumption" class="form-label">Consumption:</label>

@@ -33,6 +33,7 @@ class DCEData(BaseModel):
     driven_time: time
     arrive_dt: datetime
 
+    # TODO: Check this validator (Pydantic required fields???)
     @validator('start_odometer', 'driven_km', pre=True)
     def change_type(cls, v):
         return v or None
@@ -40,9 +41,9 @@ class DCEData(BaseModel):
     @root_validator
     def check(cls, values):
         if (
-            values['start_odometer'] is None and values['driven_km'] is None
+            values['start_odometer'] == values['driven_km']
         ) or (
-            values['start_odometer'] is not None and values['driven_km'] is not None
+            None not in [values['start_odometer'], values['driven_km']]
         ):
             raise HTTPException(
                 status.HTTP_400_BAD_REQUEST,
@@ -78,9 +79,6 @@ async def index(request: Request):
     )
 
 
-
-
-
 @app.post("/calculate", response_class=HTMLResponse)
 async def calculate(request: Request):
     form_data = await request.form()
@@ -98,6 +96,7 @@ async def calculate(request: Request):
     cost = round(trip_consumption * data.petrol_price)
     cost_by_km = round((cost / distance), 2)
 
+    # Save petrol price to file. Its useful for next calculation
     f = open("petrol_price.txt", 'w')
     f.write(str(data.petrol_price))
     f.close()

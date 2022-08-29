@@ -1,7 +1,8 @@
 from datetime import time
 from datetime import datetime, timedelta
 from typing import Optional
-from fastapi import FastAPI, Request, Form
+from pydantic import BaseModel, validator, root_validator
+from fastapi import FastAPI, Request, HTTPException, status
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
@@ -11,6 +12,57 @@ app = FastAPI()
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
 templates = Jinja2Templates(directory="templates")
+
+
+@app.exception_handler(HTTPException)
+async def http_exception_handler(request: Request, exc: HTTPException):
+    return templates.TemplateResponse(
+        "missing_fields.html", {
+            "request": request,
+            "err_msg": exc.detail
+        }
+    )
+
+
+class DCEData(BaseModel):
+    petrol_price: float
+    consumption: float
+    start_odometer: Optional[int]
+    arrive_odometer: int
+    driven_km: Optional[float]
+    driven_time: time
+    arrive_dt: datetime
+
+    @validator('start_odometer', 'driven_km', pre=True)
+    def change_type(cls, v):
+        return v or None
+
+    @root_validator
+    def check(cls, values):
+        if (
+            values['start_odometer'] is None and values['driven_km'] is None
+        ) or (
+            values['start_odometer'] is not None and values['driven_km'] is not None
+        ):
+            raise HTTPException(
+                status.HTTP_400_BAD_REQUEST,
+                "Required 'start_odometer' or 'driven_km'"
+            )
+
+        if values['driven_km']:
+            values['start_odometer'] = \
+                values['arrive_odometer'] - values.pop('driven_km')
+
+        if values['arrive_odometer'] < values['start_odometer']:
+            raise HTTPException(
+                status.HTTP_400_BAD_REQUEST,
+                (
+                    "'arrive_odometer' must be greated "
+                    f"then {values['start_odometer']}"
+                )
+            )
+
+        return values
 
 
 @app.get("/", response_class=HTMLResponse)
@@ -26,59 +78,36 @@ async def index(request: Request):
     )
 
 
+
+
+
 @app.post("/calculate", response_class=HTMLResponse)
-async def calculate(
-    request: Request,
-    petrol_price: float = Form(),
-    consumption: float = Form(),
-    start_odometer: Optional[int] = Form(None),
-    arrive_odometer: int = Form(),
-    driven_km: Optional[float] = Form(None),
-    driven_time: time = Form(),
-    arrive_dt: datetime = Form()
-):
-    err_msg = ""
+async def calculate(request: Request):
+    form_data = await request.form()
 
-    if (start_odometer is None and driven_km is None) or (
-            start_odometer is not None and driven_km is not None):
+    data = DCEData(**form_data)
 
-        err_msg = "Required 'start_odometer' or 'driven_km'"
-
-    if driven_km:
-        start_odometer = arrive_odometer - driven_km
-
-    if arrive_odometer < start_odometer:
-        err_msg = f"'arrive_odometer' must be greated then {start_odometer}"
-
-    if err_msg != "":
-        return templates.TemplateResponse(
-            "missing_fields.html", {
-                "request": request,
-                "err_msg": err_msg
-            }
-        )
-
-    start_dt = arrive_dt - timedelta(
-        hours=driven_time.hour,
-        minutes=driven_time.minute,
+    start_dt = data.arrive_dt - timedelta(
+        hours=data.driven_time.hour,
+        minutes=data.driven_time.minute,
     )
     start_dt = start_dt.strftime("%d.%m.%Y %H:%M")
 
-    distance = arrive_odometer - start_odometer
-    trip_consumption = round((distance * consumption) / 100, 1)
-    cost = round(trip_consumption * petrol_price)
+    distance = data.arrive_odometer - data.start_odometer
+    trip_consumption = round((distance * data.consumption) / 100, 1)
+    cost = round(trip_consumption * data.petrol_price)
     cost_by_km = round((cost / distance), 2)
 
     f = open("petrol_price.txt", 'w')
-    f.write(str(petrol_price))
+    f.write(str(data.petrol_price))
     f.close()
 
     return templates.TemplateResponse(
         "calculations.html", {
             "request": request,
-            "consumption": consumption,
+            "consumption": data.consumption,
             "trip_consumption": trip_consumption,
-            "petrol_price": petrol_price,
+            "petrol_price": data.petrol_price,
             "cost": cost,
             "start_dt": start_dt,
             "cost_by_km": cost_by_km

@@ -85,16 +85,23 @@ async def calculate(request: Request):
 
     data = DCEData(**form_data)
 
-    start_dt = data.arrive_dt - timedelta(
-        hours=data.driven_time.hour,
-        minutes=data.driven_time.minute,
-    )
-    start_dt = start_dt.strftime("%d.%m.%Y %H:%M")
+    start_dt = (
+        data.arrive_dt - timedelta(
+            hours=data.driven_time.hour,
+            minutes=data.driven_time.minute,
+        )
+    ).strftime("%d.%m.%Y %H:%M")
+    arrive_dt = data.arrive_dt.strftime("%d.%m.%Y %H:%M")
 
     distance = data.arrive_odometer - data.start_odometer
     trip_consumption = round((distance * data.consumption) / 100, 1)
     cost = round(trip_consumption * data.petrol_price)
     cost_by_km = round((cost / distance), 2)
+
+    average_speed = round((
+        distance / (
+            data.driven_time.hour + (
+                data.driven_time.minute / 60))), 1) 
 
     # Save petrol price to file. Its useful for next calculation
     f = open("petrol_price.txt", 'w')
@@ -109,6 +116,12 @@ async def calculate(request: Request):
             "petrol_price": data.petrol_price,
             "cost": cost,
             "start_dt": start_dt,
-            "cost_by_km": cost_by_km
+            "arrive_dt": arrive_dt,
+            "cost_by_km": cost_by_km,
+            "start_odo": data.start_odometer,
+            "arrive_odo": data.arrive_odometer,
+            "driven_time": data.driven_time,
+            "distance": distance,
+            "average_speed": average_speed
         }
     )

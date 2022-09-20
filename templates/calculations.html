@@ -15,14 +15,19 @@
 <body>
     <h2 class="border border-primary rounded-pill" align="center">Calculation</h2>
     <br>
-    <h3 class="border rounded-pill" align="center">Start from</h3>
-    <h3 align="center">{{ start_dt }}</h3>
+    <h3 class="border rounded-pill" align="center">Time - Odometer (start & end)</h3>
+    <h5 align="center">{{ start_dt }} - {{ start_odo }} km</h5>
+    <h5 align="center">{{ arrive_dt }} - {{ arrive_odo }} km</h5>
     <br>
-    <h3 class="border rounded-pill" align="center">Cost by km</h3>
-    <h3 align="center">{{ cost_by_km }} den</h3>
+    <h3 class="border rounded-pill" align="center">Driven time & distance</h3>
+    <h5 align="center">{{ driven_time }} - {{ distance }} km</h5>
+    <br>
+    <h3 class="border rounded-pill" align="center">Average speed</h3>
+    <h5 align="center">{{ average_speed }} km/h</h5>
     <br>
     <h3 class="border rounded-pill" align="center">Petrol consumption cost</h3>
-    <h3 align="center">{{ consumption }} L/100km ({{ trip_consumption }} L x {{ petrol_price }} = {{ cost }})</h3>
+    <h5 align="center">{{ consumption }} L/100km ({{ trip_consumption }} L x {{ petrol_price }} = {{ cost }})</h5>
+    <h5 align="center">Cost by km {{ cost_by_km }}</h5>
 </body>
 
 </html>

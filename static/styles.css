@@ -1,10 +1,59 @@
 body {
     padding: 15px;
+    background-color: #f1faee !important;
 }
 
-@media only screen and (max-width: 480px) {
-    .formContainer {
-        display: flex;
-        flex-direction: column;
-    }
+.formContainer {
+    display: flex;
+    flex-direction: column;
+}
+
+.container-custom {
+    max-width: 500px;
+    margin-right: auto;
+    margin-left: auto;
+}
+
+.calc {
+    padding: 10px;
+    background-color: #028090;
+    color: #f1faee;
+    border-radius: 15px;
+}
+
+.value {
+    padding: 9px;
+    background-color: #00a896;
+    color: #f1faee;
+    border-radius: 15px;
+    font-size: 21px;
+}
+
+p,
+.form-label {
+    font-size: 18px;
+    font-weight: 500;
+    color: #155a62;
+    margin: 0 !important;
+
+}
+
+.group-calc {
+    padding: 20px 10px 0;
+}
+
+button {
+    background-color: #028090 !important;
+    border-color: #028090 !important;
+    padding: 10px 20px !important;
+    font-size: 21px !important;
+    font-weight: 500 !important;
+    border-radius: 15px !important;
+    max-width: 200px;
+    min-width: 200px;
+    margin-inline: auto !important;
+}
+
+form {
+    padding: 0 15px !important;
 }

@@ -1,58 +1,151 @@
 <html>
-
 <head>
     <title>Driving car expanse</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
+
     <link id="favicon" rel="icon" type="image/x-icon" href="static/images/favicon.ico">
     <link href="{{ url_for('static', path='/styles.css') }}" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
-        crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://unpkg.com/@picocss/pico@1.*/css/pico.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Dancing+Script">
+    <style>
+        h2 {
+            font-family: 'Dancing Script', serif;
+            font-size: 48px;
+            text-shadow: 4px 4px 4px #aaa;
+        }
+    </style>
 </head>
-
 <body>
-    <div class="container-custom">
-        <h2 align="center" class="calc">Driving Car Expense</h2><br>
-        <form class="formContainer" action="/calculate" method="POST">
-            <div class="mb-3">
-                <label for="petrol_price" class="form-label">Petrol price (previous price: {{ petrol_price
-                    }}):</label>
-                <input type="number" class="form-control" step="0.1" placeholder="0.0" id="petrol_price"
-                    name="petrol_price" autofocus required>
+    <form action="/calculate" method="POST">
+        <article>
+            <h2 align="center">Driving Car Expense</h2>
+            <details role="list">
+                <summary aria-haspopup="listbox" role="button">Theme</summary>
+                <ul role="listbox">
+                    <li><a href="#" data-theme-switcher="auto">Auto</a></li>
+                    <li><a href="#" data-theme-switcher="light">Light</a></li>
+                    <li><a href="#" data-theme-switcher="dark">Dark</a></li>
+                </ul>
+            </details>
+            <label>Petrol price (previous price: {{ petrol_price }}):
+                <input type="number" step="0.1" placeholder="0.0" name="petrol_price" autofocus required>
+            </label>
+            <label>Consumption:
+                <input type="number" step="0.1" placeholder="0.0" name="consumption" required>
+            </label>
+            <div class="grid">
+                <label>Start odometer:
+                    <input type="number" placeholder="0" name="start_odometer">
+                </label>
+                <label>Driven km:
+                    <input type="number" placeholder="0.0" name="driven_km">
+                </label>
             </div>
-            <div class="mb-3">
-                <label for="consumption" class="form-label">Consumption:</label>
-                <input type="number" class="form-control" step="0.1" placeholder="0.0" id="consumption"
-                    name="consumption" required>
-            </div>
-            <div class="mb-3">
-                <label for="start_odometer" class="form-label">Start odometer:</label>
-                <input type="number" class="form-control" placeholder="0" id="start_odomter" name="start_odometer">
-            </div>
-            <div class="mb-3">
-                <label for="driven_km" class="form-label">Driven km:</label>
-                <input type="number" class="form-control" placeholder="0.0" id="driven_km" name="driven_km">
-            </div>
-            <div class="mb-3">
-                <label for="driven_time" class="form-label">Driven time:</label>
-                <input type="time" class="form-control" placeholder="0.0" id="driven_time" name="driven_time" required>
-            </div>
-            <div class="mb-3">
-                <label for="arrive_odometer" class="form-label">Arrive odometer:</label>
-                <input type="number" class="form-control" placeholder="0" id="arrive_odometer" name="arrive_odometer"
-                    required>
-            </div>
-            <div class="mb-3">
-                <label for="arrive_dt" class="form-label">Arrive time:</label>
-                <input type="datetime-local" class="form-control" placeholder="0" id="arrive_dt" name="arrive_dt"
-                    required>
+            <div class="grid">
+                <label>Arrive odometer:
+                    <input type="number" placeholder="0" name="arrive_odometer" required>
+                </label>
+                <label>Driven time:
+                    <input type="time" placeholder="0.0" name="driven_time" required>
+                </label>
+                <label>Arrive time:
+                    <input type="datetime-local" placeholder="0" name="arrive_dt" required>
+                </label>
             </div>
             <br>
             <button type="submit" class="btn btn-primary">Calculate</button>
-        </form>
-    </div>
+
+        </article>
+    </form>
+
+
 </body>
+
+<!-- Minimal theme switcher -->
+<!-- <script src="../js/theme-switcher.js"></script> -->
+<script>
+    const themeSwitcher = {
+
+            // Config
+            _scheme: "auto",
+            menuTarget: "details[role='list']",
+            buttonsTarget: "a[data-theme-switcher]",
+            buttonAttribute: "data-theme-switcher",
+            rootAttribute: "data-theme",
+            localStorageKey: "picoPreferredColorScheme",
+
+            // Init
+            init() {
+                this.scheme = this.schemeFromLocalStorage;
+                this.initSwitchers();
+            },
+
+            // Get color scheme from local storage
+            get schemeFromLocalStorage() {
+                if (typeof window.localStorage !== "undefined") {
+                    if (window.localStorage.getItem(this.localStorageKey) !== null) {
+                        return window.localStorage.getItem(this.localStorageKey);
+                    }
+                }
+                return this._scheme;
+            },
+
+            // Preferred color scheme
+            get preferredColorScheme() {
+                return window.matchMedia("(prefers-color-scheme: dark)").matches
+                    ? "dark"
+                    : "light";
+            },
+
+            // Init switchers
+            initSwitchers() {
+                const buttons = document.querySelectorAll(this.buttonsTarget);
+                buttons.forEach((button) => {
+                    button.addEventListener("click", event => {
+                        event.preventDefault();
+                        // Set scheme
+                        this.scheme = button.getAttribute(this.buttonAttribute);
+                        // Close dropdown
+                        document.querySelector(this.menuTarget).removeAttribute("open");
+                    }, false);
+                });
+            },
+
+            // Set scheme
+            set scheme(scheme) {
+                if (scheme == "auto") {
+                    this.preferredColorScheme == "dark"
+                        ? (this._scheme = "dark")
+                        : (this._scheme = "light");
+                } else if (scheme == "dark" || scheme == "light") {
+                    this._scheme = scheme;
+                }
+                this.applyScheme();
+                this.schemeToLocalStorage();
+            },
+
+            // Get scheme
+            get scheme() {
+                return this._scheme;
+            },
+
+            // Apply scheme
+            applyScheme() {
+                document
+                    .querySelector("html")
+                    .setAttribute(this.rootAttribute, this.scheme);
+            },
+
+            // Store scheme to local storage
+            schemeToLocalStorage() {
+                if (typeof window.localStorage !== "undefined") {
+                    window.localStorage.setItem(this.localStorageKey, this.scheme);
+                }
+            },
+        };
+
+        // Init
+        themeSwitcher.init();
+</script>
 
 </html>
